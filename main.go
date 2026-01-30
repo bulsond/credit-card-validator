@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 // Bank
@@ -69,10 +70,32 @@ func loadBankData(path string) ([]Bank, error) {
 }
 
 // extractBin
-func extractBIN(cardNumber string) int {
+func extractBIN(cardNumber string) (int, bool) {
 	result := 0
+	cardNumber = strings.TrimSpace(cardNumber)
+	if len(cardNumber) == 0 {
+		return result, false
+	}
 
-	return result
+	var builder strings.Builder
+	builder.Grow(16)
+	for _, s := range cardNumber {
+		if s == ' ' {
+			continue
+		}
+		if !unicode.IsDigit(s) {
+			return result, false
+		}
+		builder.WriteRune(s)
+	}
+
+	strNum := builder.String()[:6]
+	result, err := strconv.Atoi(strNum)
+	if err != nil {
+		return result, false
+	}
+
+	return result, true
 }
 
 // identifyBank
@@ -94,4 +117,11 @@ func main() {
 	fmt.Println(banks, err)
 
 	fmt.Println(identifyBank(400000, banks))
+
+	bin, ok := extractBIN("9800 1200 7891 8976")
+	if !ok {
+		fmt.Println("Номер не определен")
+		return
+	}
+	fmt.Println(identifyBank(bin, banks))
 }
