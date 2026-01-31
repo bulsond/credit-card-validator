@@ -34,7 +34,6 @@ func (a *App) Run() {
 		panic(err)
 	}
 	fmt.Println("Добро пожаловать в программу валидации карт!")
-	fmt.Println(banks)
 
 	for {
 		cardNumber, err := getCardNumber(a.minLengthCardNumber, a.maxLengthCardNumber)
@@ -55,7 +54,14 @@ func (a *App) Run() {
 			fmt.Println("этот номер карты не прошёл проверку, он неверен.")
 			continue
 		}
-
 		fmt.Println("этот номер карты прошёл проверку.")
+
+		bin := extractBIN(cardNumber)
+		bank, ok := identifyBank(bin, banks)
+		if !ok {
+			fmt.Println("Эмитент не определен")
+			continue
+		}
+		fmt.Printf("Банк: %s\n", bank)
 	}
 }
