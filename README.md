@@ -32,4 +32,6 @@
 
 ### 🎮 Примеры использования
 
-[Примеры использования]
+<img width="735" height="252" alt="image" src="https://github.com/user-attachments/assets/d4b38ee0-f3e3-4e33-b731-6f66ca4f0960" />
+
+
