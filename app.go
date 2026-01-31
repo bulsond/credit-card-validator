@@ -49,6 +49,13 @@ func (a *App) Run() {
 			}
 		}
 
-		fmt.Printf("Вы ввели: %s\n", cardNumber)
+		fmt.Printf("Вы ввели: %s, ", cardNumber)
+		isValid := validateLuhn(cardNumber)
+		if !isValid {
+			fmt.Println("этот номер карты не прошёл проверку, он неверен.")
+			continue
+		}
+
+		fmt.Println("этот номер карты прошёл проверку.")
 	}
 }

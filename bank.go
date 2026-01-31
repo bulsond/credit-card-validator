@@ -66,3 +66,26 @@ func loadBankData(path string) ([]Bank, error) {
 
 	return banks, nil
 }
+
+// extractBin извлечение BIN из строки номера карты
+func extractBIN(cardNumber string) int {
+	num := cardNumber[:6]
+	bin, _ := strconv.Atoi(num)
+	return bin
+}
+
+// identifyBank определение названия банка по его BIN
+func identifyBank(bin int, banks []Bank) (string, bool) {
+	name := "Неизвестный банк"
+	ok := false
+
+	for _, bank := range banks {
+		if bin >= bank.BinFrom && bin <= bank.BinTo {
+			name = bank.Name
+			ok = true
+			break
+		}
+	}
+
+	return name, ok
+}
