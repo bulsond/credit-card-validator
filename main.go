@@ -167,6 +167,25 @@ func getUserInput() string {
 	return processed
 }
 
+// validateInput проверка пользовательского ввода
+func validateInput(cardNumber string) bool {
+	const min = 13
+	const max = 19
+	length := len(cardNumber)
+
+	if length < min || length > max {
+		return false
+	}
+
+	for _, s := range cardNumber {
+		if !unicode.IsDigit(s) {
+			return false
+		}
+	}
+
+	return true
+}
+
 func main() {
 	// banks, err := loadBankData("banks.txt")
 	// fmt.Println(banks, err)
@@ -185,14 +204,19 @@ func main() {
 	// fmt.Println(validateLuhn("9800 1200 7891 8976"))
 	// fmt.Println(validateLuhn("2202 2062 8242 2422"))
 
+	// for {
+	// 	input := getUserInput()
+	// 	if len(input) == 0 {
+	// 		fmt.Println("Спасибо, за использование нашей программы.")
+	// 		return
+	// 	}
+	// 	fmt.Printf("Вы ввели: '%s'\n", input)
+	// 	fmt.Println()
+	// }
+
 	for {
-		input := getUserInput()
-		if len(input) == 0 {
-			fmt.Println("Спасибо, за использование нашей программы.")
-			return
-		}
-		fmt.Printf("Вы ввели: '%s'\n", input)
-		fmt.Println()
+		cardNumber := getUserInput()
+		fmt.Println(validateInput(cardNumber))
 	}
 
 }
