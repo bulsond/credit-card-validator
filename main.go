@@ -10,14 +10,14 @@ import (
 	"unicode"
 )
 
-// Bank
+// Bank данные о банке
 type Bank struct {
 	Name    string
 	BinFrom int
 	BinTo   int
 }
 
-// loadBankData
+// loadBankData загрузка из файла данных о банках
 func loadBankData(path string) ([]Bank, error) {
 	banks := []Bank{}
 
@@ -69,7 +69,7 @@ func loadBankData(path string) ([]Bank, error) {
 	return banks, nil
 }
 
-// extractBin
+// extractBin извлечение BIN из строки номера карты
 func extractBIN(cardNumber string) (int, bool) {
 	result := 0
 	cardNumber = strings.TrimSpace(cardNumber)
@@ -98,7 +98,7 @@ func extractBIN(cardNumber string) (int, bool) {
 	return result, true
 }
 
-// identifyBank
+// identifyBank определение названия банка по его BIN
 func identifyBank(bin int, banks []Bank) string {
 	result := "Неизвестный банк"
 
@@ -112,16 +112,65 @@ func identifyBank(bin int, banks []Bank) string {
 	return result
 }
 
-func main() {
-	banks, err := loadBankData("banks.txt")
-	fmt.Println(banks, err)
-
-	fmt.Println(identifyBank(400000, banks))
-
-	bin, ok := extractBIN("9800 1200 7891 8976")
-	if !ok {
-		fmt.Println("Номер не определен")
-		return
+// validateLuh проверка строки номера карты по алгоритму Луна
+func validateLuhn(cardNumber string) bool {
+	cardNumber = strings.TrimSpace(cardNumber)
+	if len(cardNumber) < 16 {
+		return false
 	}
-	fmt.Println(identifyBank(bin, banks))
+
+	// Шаг 1: Преобразовать входную строку в массив цифр
+	var digits []uint8
+	for _, s := range cardNumber {
+		if s == ' ' {
+			continue
+		}
+		if !unicode.IsDigit(s) {
+			return false
+		}
+		digit, err := strconv.Atoi(string(s))
+		if err != nil {
+			return false
+		}
+		digits = append(digits, uint8(digit))
+	}
+
+	// Шаг 2: Применить преобразование Луна
+	poss := [8]uint8{14, 12, 10, 8, 6, 4, 2, 0}
+	for _, pos := range poss {
+		p := digits[pos] * 2
+		if p > 9 {
+			// tens := p / 10
+			// ones := p % 10
+			// p = tens + ones
+			p -= 9
+		}
+		digits[pos] = p
+	}
+	var sum uint8
+	for _, v := range digits {
+		sum += v
+	}
+	result := (sum % 10) == 0
+
+	return result
+}
+
+func main() {
+	// banks, err := loadBankData("banks.txt")
+	// fmt.Println(banks, err)
+
+	// fmt.Println(identifyBank(400000, banks))
+
+	// bin, ok := extractBIN("9800 1200 7891 8976")
+	// if !ok {
+	// 	fmt.Println("Номер не определен")
+	// 	return
+	// }
+	// fmt.Println(identifyBank(bin, banks))
+
+	fmt.Println(validateLuhn("4532015112830366"))
+	fmt.Println(validateLuhn("1234567890123456"))
+	fmt.Println(validateLuhn("9800 1200 7891 8976"))
+	fmt.Println(validateLuhn("2202 2062 8242 2422"))
 }
