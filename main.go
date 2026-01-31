@@ -1,7 +1,10 @@
 package main
 
-import "fmt"
-
 func main() {
-	fmt.Println("Привет мир")
+	app, err := NewApp("banks.txt")
+	if err != nil {
+		panic(err)
+	}
+
+	app.Run()
 }
