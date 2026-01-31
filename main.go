@@ -156,6 +156,17 @@ func validateLuhn(cardNumber string) bool {
 	return result
 }
 
+// getUserInput получение пользовательского ввода
+func getUserInput() string {
+	fmt.Print("Введите номер кредитной карты (для выхода сразу нажмите ВВОД): ")
+
+	reader := bufio.NewReader(os.Stdin)
+	input, _ := reader.ReadString('\n')
+	processed := strings.TrimSpace(input)
+
+	return processed
+}
+
 func main() {
 	// banks, err := loadBankData("banks.txt")
 	// fmt.Println(banks, err)
@@ -169,8 +180,19 @@ func main() {
 	// }
 	// fmt.Println(identifyBank(bin, banks))
 
-	fmt.Println(validateLuhn("4532015112830366"))
-	fmt.Println(validateLuhn("1234567890123456"))
-	fmt.Println(validateLuhn("9800 1200 7891 8976"))
-	fmt.Println(validateLuhn("2202 2062 8242 2422"))
+	// fmt.Println(validateLuhn("4532015112830366"))
+	// fmt.Println(validateLuhn("1234567890123456"))
+	// fmt.Println(validateLuhn("9800 1200 7891 8976"))
+	// fmt.Println(validateLuhn("2202 2062 8242 2422"))
+
+	for {
+		input := getUserInput()
+		if len(input) == 0 {
+			fmt.Println("Спасибо, за использование нашей программы.")
+			return
+		}
+		fmt.Printf("Вы ввели: '%s'\n", input)
+		fmt.Println()
+	}
+
 }
