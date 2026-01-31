@@ -11,17 +11,23 @@ type App struct {
 	maxLengthCardNumber int
 }
 
-func NewApp(file string) (*App, error) {
+// NewApp создать экземпляр приложения
+func NewApp(file string, minLength, maxLength int) (*App, error) {
 	if len(file) == 0 {
 		return nil, errors.New("Не указан путь к файлу банков.")
 	}
+	if minLength < 13 || maxLength > 19 {
+		return nil, errors.New("Неверные ограничения на длину номера карты.")
+	}
+
 	return &App{
 		fileBanks:           file,
-		minLengthCardNumber: 13,
-		maxLengthCardNumber: 19,
+		minLengthCardNumber: minLength,
+		maxLengthCardNumber: maxLength,
 	}, nil
 }
 
+// Run запуск приложения
 func (a *App) Run() {
 	banks, err := loadBankData(a.fileBanks)
 	if err != nil {
